@@ -1,35 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>蚂蚁笔记备份</title>
-  <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="icon" href="https://s1.vika.cn/space/2023/01/01/2314fbfdb64249d18b4dbbc05bad6d1e">
+  <script src="js/vue.js"></script>
+  <script src="./js/download.js"></script>
+  <title>蚂蚁笔记数据备份</title>
 </head>
 
-
-<style>
-    .urlImages{
-      cursor: pointer;
-    }
-</style>
-
 <body>
-    <div class="container">
-      <div class="jumbotron">
-        <h2>本站点用于存放蚂蚁笔记备份数据</h2>
-        <p>leanote_backup</p>
-        <p><a class="btn btn-primary btn-lg" href="https://gitee.com/codeslive/leanote_backup" role="button">Learn more</a></p>
-        <img class="img-thumbnail urlImages" src="https://cdn.staticaly.com/gh/mystaticcode/showImg@main/api/showImg/202212312350723.webp" alt="" onclick="site('http://b5w.cn/r5Rsh')">
-      </div>
+  <div id="app">
+    <div class="header">
+      <button @click="getBackup(year_list.year)" v-for="(year_list,index) in year_list">{{year_list.year}}</button>
     </div>
+    <template v-if="type===1">
+      <table border="1" cellspacing="0" cellpadding="0" class="tabs">
+        <tr>
+          <th>序号</th>
+          <th>备份时间</th>
+          <th>操作</th>
+          <th>状态</th>
+        </tr>
+        <tr v-for="(item , index ) in backup_list">
+          <td>{{index+1}}</td>
+          <td>{{item.date}}</td>
+          <td><button @click="download(item.year , item.mounth)">下载</button>
+          <td><button>{{status}}</button>
+        </tr>
+      </table>
+    </template>
+  </div>
 </body>
-</html>
 
+</html>
 <script>
-  function site(url) {
-      window.open(url);
-  }
+  var app = new Vue({
+    el: '#app',
+    data: {
+      type: 1, //模板id
+      list: [], //全部年份的数据
+      year_list: [], //全部年份
+      backup_list: [], //某年份的所有备份数据
+      status:"",
+    },
+
+    methods: {
+      //获取所有年份的列表
+      getYear () {
+        let year_list = [];
+        for (let i in this.list) {
+          year_list.push(this.list[i][0]);
+
+        }
+        this.year_list = year_list;
+      },
+
+      //获取初始渲染数据
+      getDefault () {
+        let defaultYear = this.list[0];
+        let defaultList = [];
+        for (let i in defaultYear) {
+          if (defaultYear[i].id > 0) {
+            defaultList.push(defaultYear[i]);
+          }
+        }
+        this.backup_list = defaultList;
+      },
+
+      //获取该年份所有月份备份的数据
+      getBackup (year) {
+        this.backup_list = [];
+        for (let i = 0; i < this.list.length; i++) {
+          let backup_list = this.list[i];
+          for (let j = 0; j < backup_list.length; j++) {
+            let year_name = backup_list[j].year;
+            if (year === year_name) {
+              if (backup_list[j].id > 0) {
+                this.backup_list.push(backup_list[j]);
+                break;
+              }
+            }
+          }
+        }
+      },
+
+      //点击开始下载
+      download (year, mounth) {
+        //月份小于10的,前面补0
+        mounth < 10 ? `0${mounth}` : mounth;
+        //拼接下载地址
+        let url = `https://cdn.staticaly.com/gh/codeslive/leanote_backup@master/${year}/${mounth}/mongodb_backup.zip`;
+
+        //判断获取到的链接是否为空
+        if (url != undefined && url != '') {
+          //开始下载
+          window.location.href = url;
+          localStorage.setItem("status" , "成功");
+          this.status = localStorage.getItem("status");
+        }else{
+          localStorage.setItem("status" , "未下载");
+          this.status = localStorage.getItem("status");
+        }
+        
+      },
+    },
+    created () {
+      //获取数据
+      this.list = downloadUrl;
+      //获取年份
+      this.getYear();
+      //获取初始默认渲染数据
+      this.getDefault();
+      localStorage.setItem("status" , "未下载");
+      this.status = localStorage.getItem("status");
+    },
+  })
 </script>
