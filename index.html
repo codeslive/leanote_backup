@@ -93,12 +93,13 @@
         //月份小于10的,前面补0
         mounth < 10 ? `0${mounth}` : mounth;
         //拼接下载地址
-        let url = `https://cdn.staticaly.com/gh/codeslive/leanote_backup@master/${year}/${mounth}/mongodb_backup.zip`;
+        let url = `https://cdn.staticaly.com/gh/codeslive/leanote_backup/package@master/${year}/${mounth}/mongodb_backup.zip`;
 
         //判断获取到的链接是否为空
         if (url != undefined && url != '') {
           //开始下载
-          window.open(url);
+          // window.open(url);
+          window.location.href = url;
           localStorage.setItem("status" , "成功");
           this.status = localStorage.getItem("status");
         }else{
