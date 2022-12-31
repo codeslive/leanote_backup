@@ -98,7 +98,7 @@
         //判断获取到的链接是否为空
         if (url != undefined && url != '') {
           //开始下载
-          window.location.href = url;
+          window.open(url);
           localStorage.setItem("status" , "成功");
           this.status = localStorage.getItem("status");
         }else{
