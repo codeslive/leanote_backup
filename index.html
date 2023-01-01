@@ -22,6 +22,10 @@
   .status {
     color: #f56c6c !important;
   }
+
+  [v-cloak] {
+    display: none;
+  }
 </style>
 
 <body>
@@ -32,7 +36,7 @@
     </div>
 
     <!-- 信息弹窗 -->
-    <div class="ground" id="Ground" v-show="isAlert">
+    <div class="ground" id="Ground" v-show="isAlert" v-cloak>
       <div class="title_text">{{alertTip}}</div>
       <hr>
       <div class="content">{{errorText}}</div>
