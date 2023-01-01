@@ -7,16 +7,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./css/index.css">
   <link rel="icon" href="//cdn.staticaly.com/gh/mystaticcode/showImg@main/api/showImg/202301010359891.png">
+  <link rel="stylesheet" href="./css/alert.css">
   <script src="//cdn.staticaly.com/gh/mystaticcode/showImg@main/api/showImg/vue.min.js"></script>
   <script src="./js/download.js"></script>
   <title>蚂蚁笔记数据备份</title>
 </head>
 
+
+<style>
+  .default {
+    background-color: darkgoldenrod !important;
+  }
+
+  .status {
+    color: #f56c6c !important;
+  }
+</style>
+
 <body>
   <div id="app">
     <div class="header">
-      <button @click="getBackup(year_list.year)" v-for="(year_list,index) in year_list">{{year_list.year}}</button>
+      <button @click="getBackup(year_list.year)" v-for="(year_list,index) in year_list"
+        :class="{ default: isClick === year_list.year }">{{year_list.year}}</button>
     </div>
+
+    <!-- 信息弹窗 -->
+    <div class="ground" id="Ground" v-show="isAlert">
+      <div class="title_text">{{alertTip}}</div>
+      <hr>
+      <div class="content">{{errorText}}</div>
+      <hr>
+      <div class="close_alert">
+        <input type="button" value="开始下载" v-show="showDownload" @click="startDownload()">
+        <button @click="closeAlert()">关闭弹窗</button>
+      </div>
+    </div>
+
     <template v-if="type===1">
       <table border="1" cellspacing="0" cellpadding="0" class="tabs">
         <tr>
@@ -29,10 +55,11 @@
           <td>{{index+1}}</td>
           <td>{{item.date}}</td>
           <td><button @click="download(item.year , item.mounth)">下载</button>
-          <td><button>{{status}}</button>
+          <td><button :class="{ status: statusCode === 0 }">{{status}}</button>
         </tr>
       </table>
     </template>
+
   </div>
 </body>
 
@@ -45,7 +72,14 @@
       list: [], //全部年份的数据
       year_list: [], //全部年份
       backup_list: [], //某年份的所有备份数据
-      status:"",
+      status: "",
+      isClick: 0,
+      errorText: "", //错误内容
+      isAlert: false,
+      alertTip: "",
+      showDownload: false,
+      startUrl: "",
+      statusCode: 1
     },
 
     methods: {
@@ -65,6 +99,8 @@
         for (let i in defaultYear) {
           if (defaultYear[i].id > 0) {
             defaultList.push(defaultYear[i]);
+          } else {
+            this.isClick = defaultYear[i].year;
           }
         }
         this.backup_list = defaultList;
@@ -72,6 +108,11 @@
 
       //获取该年份所有月份备份的数据
       getBackup (year) {
+        this.isClick = year;
+        this.closeAlert();
+        this.statusCode = 1;
+        localStorage.setItem("status", "未下载");
+        this.status = localStorage.getItem("status");
         this.backup_list = [];
         for (let i = 0; i < this.list.length; i++) {
           let backup_list = this.list[i];
@@ -93,20 +134,62 @@
         mounth < 10 ? `0${mounth}` : mounth;
         //拼接下载地址
         let url = `//cdn.staticaly.com/gh/codeslive/leanote_backup@master/package/${year}/${mounth}/mongodb_backup.zip`;
+        if (mounth != "" && mounth != undefined && year != "" && year != undefined) {
+          //判断获取到的链接是否为空
+          if (url != undefined && url != '') {
+            //开始下载
+            // window.location.href = url;
+            this.showDownload = true;
+            this.showAlert();
+            this.errorText = `${year}-${mounth}-mongodb_backup.zip`;
+            this.alertTip = "确定下载吗?";
+            this.startUrl = url;
 
-        //判断获取到的链接是否为空
-        if (url != undefined && url != '') {
-          //开始下载
-          // window.open(url);
-          window.location.href = url;
-          localStorage.setItem("status" , "成功");
+            localStorage.setItem("status", "成功");
+            this.status = localStorage.getItem("status");
+          } else {
+            localStorage.setItem("status", "未下载");
+            this.status = localStorage.getItem("status");
+          }
+        } else {
+          let errorUrl;
+          let errorTip;
+          if (year != "" && year != undefined) {
+            errorTip = "月份(参数缺失)";
+            errorUrl = `//cdn.staticaly.com/gh/codeslive/leanote_backup@master/package/${year}/${errorTip}/mongodb_backup.zip`;
+          } else {
+            errorTip = "年份(参数缺失)";
+            errorUrl = `//cdn.staticaly.com/gh/codeslive/leanote_backup@master/package/${errorTip}/${mounth}/mongodb_backup.zip`;
+          }
+          this.alertTip = "错误提示";
+          this.errorText = errorUrl;
+          this.showAlert();
+          this.showDownload = false;
+          localStorage.setItem("status", "获取地址失败");
           this.status = localStorage.getItem("status");
-        }else{
-          localStorage.setItem("status" , "未下载");
-          this.status = localStorage.getItem("status");
+          this.statusCode = 0;
+          return false;
         }
-        
+
       },
+
+
+      //确定下载
+      startDownload () {
+        this.showDownload = true;
+        window.location.href = this.startUrl;
+      },
+
+      //显示弹窗
+      showAlert () {
+        // document.getElementById("Ground").style.display = "block";
+        this.isAlert = true;
+      },
+
+      closeAlert () {
+        this.isAlert = false;
+      },
+
     },
     created () {
       //获取数据
@@ -115,7 +198,7 @@
       this.getYear();
       //获取初始默认渲染数据
       this.getDefault();
-      localStorage.setItem("status" , "未下载");
+      localStorage.setItem("status", "未下载");
       this.status = localStorage.getItem("status");
     },
   })
