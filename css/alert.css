@@ -1,0 +1,130 @@
+.ground{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 400px;
+  height: 250px;
+  border-radius: 20px;
+  border: 2px solid #fff;
+  background: #fff;
+  margin: auto;
+  position: absolute;
+  top: -200px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.ground1{
+  position: relative;
+}
+.headline{
+  margin: auto;
+  position: absolute;
+  top: 10px;
+  left: 175px;
+  right: 0;
+  bottom: 0;
+}
+.text{
+  margin: auto;
+  position: absolute;
+  top: 110px;
+  left: 50px;
+  right: 0;
+  bottom: 0;
+}
+
+.text p{
+  width: 300px;
+  position: relative;
+  top: -40px;
+  background-color: red;
+  height: 100px;
+  word-break: normal;
+}
+.yes,.no{
+  border: 2px solid #87cefa;
+  background: #87cefa;
+  border-radius: 11px;
+  width: 65px;
+  height: 38px;
+  font-size: 17px;
+}
+.yes{
+  margin: auto;
+  position: absolute;
+  top: 420px;
+  left: 140px;
+  right: 0;
+  bottom: 0;
+}
+.no{
+  margin: auto;
+  position: absolute;
+  top: 420px;
+  left: 290px;
+  right: 0;
+  bottom: 0;
+}
+
+
+
+/* 弹窗修改 */
+
+.ground .title_text{
+    width: 70%;
+    margin: 0 auto;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    
+}
+
+.ground .content{
+  width: 80%;
+  margin: 0 auto;
+  word-wrap:break-word;
+  line-height: 28px;
+  height: 100px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+.ground .close_alert{
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.ground .close_alert button{
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #F56C6C;
+    color: white;
+}
+
+.ground .close_alert button:hover{
+  background-color: #f89898;
+}
+
+.ground .close_alert input[type=button]{
+  background-color: #409eff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  margin-right: 5px;
+}
+
+.ground .close_alert input[type=button]:hover{
+  background-color: #79bbff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+
+}
+
