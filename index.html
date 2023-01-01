@@ -137,8 +137,6 @@
         if (mounth != "" && mounth != undefined && year != "" && year != undefined) {
           //判断获取到的链接是否为空
           if (url != undefined && url != '') {
-            //开始下载
-            // window.location.href = url;
             this.showDownload = true;
             this.showAlert();
             this.errorText = `${year}-${mounth}-mongodb_backup.zip`;
