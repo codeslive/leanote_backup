@@ -11,5 +11,9 @@
 - 下载路径：//cdn.staticaly.com/gh/codeslive/leanote_backup@master/package/${year}/${mounth}/mongodb_backup.zip
 
 
+### 三、备份网址
+
+[点击跳转蚂蚁笔记备份](https://backup.codeslive.top/)
+
 ![](https://cdn.staticaly.com/gh/mystaticcode/showImg@main/api/showImg/202301010408448.webp)
 
